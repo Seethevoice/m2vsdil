@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Learning From Music to Visual Storytelling of Shots: A Deep Interactive Learning Mechanism</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Microsoft Yahei' !important;
+        }
+        h1 {
+            text-align: center;
+            color: #aae0ee; /* 水藍色 */
+        }
+        h2 {
+            text-align: center;
+		color: #e6eced;
+        }
+        h3 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+        }
+        hr {
+      width: 65%; /* 或者使用百分比，例如 50% */
+      <!--border: 1px solid #000; /* 可選，設定邊框樣式 */-->
+    }
+        .example {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+	    .blue-background {
+            background-color: blue;
+            color: white;
+        }
+	    .red-background {
+            background-color: red;
+            color: white;
+        }
+	    .green-background {
+            background-color: green;
+            color: white;
+        }
+	    .bibtex {
+      font-size: 16px;
+    }
+    </style>
+</head>
+<body>
+	
+<h1>Learning From Music to Visual Storytelling of Shots: A Deep Interactive Learning Mechanism</h1>
+	<br>
+	<h3>Jen-Chun Lin<sup>1</sup>, Wen-Li Wei<sup>1</sup>, Yen-Yu Lin<sup>2</sup>, Tyng-Luh Liu<sup>1</sup>, and Hong-Yuan Mark Liao<sup>1,3</sup></h3>	
+<h3><sup>1</sup>Institute of Information Science, Academia Sinica, Taiwan</h3>
+	<h3><sup>2</sup>Department of Computer Science, National Chiao Tung University, Taiwan</h3>
+	<h3><sup>3</sup>Department of Computer Science and Information Engineering, Providence University, Taiwan</h3>
+	<h3>ACM Multimedia 2020</h3>
+<br>
+<div style="text-align: center;">
+  <a href="./mm-lin20.pdf">
+    <img src="./paper.png" alt="Paper" style="width: 50px;">
+  </a>
+</div>	
+	<br>
+	<div style="text-align: center;">
+  <video controls>    
+    <source src="Demo-small.mp4" type="video/mp4">
+  </video>
+</div>
+	<br>
+<hr>
+<h2>Abstract</h2>
+	<div class="example" style="text-align: justify;">Learning from music to visual storytelling of shots is an interesting and emerging task. It produces a coherent visual story in the form of a shot type sequence, which not only expands the storytelling potential for a song but also facilitates automatic concert video mashup process and storyboard generation. In this study, we present a deep interactive learning (DIL) mechanism for building a compact yet accurate sequence-to-sequence model to accomplish the task. Different from the one-way transfer between a pre-trained teacher network (or ensemble network) and a student network in knowledge distillation (KD), the proposed method enables collaborative learning between an ensemble teacher network and a student network. Namely, the student network also teaches. Specifically, our method first learns a teacher network that is composed of several assistant networks to generate a shot type sequence and produce the soft target (shot types) distribution accordingly through KD. It then constructs the student network that learns from both the ground truth label (hard target) and the soft target distribution to alleviate the difficulty of optimization and improve generalization capability. As the student network gradually advances, it turns to feed back knowledge to the assistant networks, thereby improving the teacher network in each iteration. Owing to such interactive designs, the DIL mechanism bridges the gap between the teacher and student networks and produces more superior capability for both networks. Objective and subjective experimental results demonstrate that both the teacher and student networks can generate more attractive shot sequences from music, thereby enhancing the viewing and listening experience.</div>
+<br>
+	<hr>
+<h2>Music to visual storytelling of shots</h2>
+	<br>
+	
+<div style="text-align: center;">
+  <video controls>    
+    <source src="Ed Sheeran - Supermarket Flowers [Live from the BRITs 2018]-cut.mp4" type="video/mp4">
+  </video>
+</div>
+<p>An example of visual storytelling for the song “Supermarket Flowers” by Ed Sheeran live at the BRIT Awards 2018. </p>
+    <p>The director sequentially uses the XLS, MCU, XLS, and MS to expand the storytelling potential in the beginning of the song.</p>
+<br>
+	<div style="text-align: center;">
+  <img src="storytelling_resize.png"  width="1000">
+</div>
+	<br>
+<hr>
+    <h2>Types of Shots</h2>
+    <div class="example">
+      In the language of film, shot (type) is a fundamental element of visual storytelling [1, 2]. The type of shot is defined as how much a target subject and its surrounding area can be seen. Totally, six types of shots are defined, as described in the following Table.
+    </div>
+    
+    <div style="text-align: center;">
+  <img src="icme2TMM_table1.png"  width="1000">
+</div>
+	
+<div class="example">
+      Besides the six types of shots, the audience shot (ADS) and musical instrument shot (MIS) also considered to enrich the visual storytelling in a concert video.
+    </div>
+	<br>
+<hr>
+<h2>Proposed Deep Interactive Learning Mechanism</h2>
+<div class="example">
+	<br>In this study, we present a deep interactive learning (DIL) mechanism for building a compact yet accurate sequence-to-sequence model to achieve the music to visual storytelling of shots translation. 
+</br>
+<br>Different from the one-way transfer between a pre-trained teacher network (or ensemble network) and a student network in knowledge distillation (KD) [3], the proposed DIL mechanism enables collaborative learning between an ensemble teacher network and a student network. Namely, the student network also teaches.
+</br>
+<br>In the proposed DIL mechanism, learning comes from two aspects: teacher-to-student and student-to-teacher. 
+	</br>
+<br>Regarding <font color="yellow">teacher-to-student</font> learning, the process starts with a powerful pre-trained teacher network, MF-RNNs with film-language [4], and then performs knowledge transfer to a student network (lightweight RNN) through KD.</br>
+<br><div style="text-align: center;"><img src="KD.png"></div></br>
+	<br>In <font color="yellow">student-to-teacher</font> learning, we turn to distill the knowledge (soft target distribution) from the student network and then transfer the knowledge to each of assistant networks (temporal resolution RNNs) integrated in the teacher network, thereby upgrading the teacher network.</br>
+<br><div style="text-align: center;"><img src="stu2tch.png" width="1000"></div></br>
+
+	<br>Thus, repeating such a DIL mechanism gradually improves the performance of both student and teacher networks.</br>
+
+<br>After training, the student network is finally used to achieve the music to visual storytelling of shots translation.</br>
+</div>
+
+	<br>	
+	<hr>
+<h2>MOS</h2>
+	<div class="example">
+	<br>Subjective evaluation in terms of 5-point mean opinion score (MOS) is conducted on three concert video sets. For a concert video set, each concert video is generated from multiple audience recordings that under the guidance of official shot type sequence and the shot type sequences translated from lightweight RNN-DIL, MF-RNNs-DIL, lightweight RNN-KD [1], and MF-RNNs (with film-language) [2], respectively.</br>
+
+<br>Three indicators are considered for evaluation: (1) Does the frequency of shot switching match the music? (2) Does the timing of cut point match the music? (3) Overall, does the visual storytelling of shots match the music?</br>
+
+<br>For each figure, the vertical and horizontal axes represent the number of people and MOS score (from bad to excellent), respectively.</br>
+		<div class="blue-background">
+    
+</div>
+		<left><p class="blue-background"> Official</p></left>
+		 <video controls height="190">    
+    <source src="CC-Net-test-1-7mashup.mp4" type="video/mp4">
+  </video>
+		<img src="adele-CCNet-1.png">
+		<img src="adele-CCNet-2.png">
+		<img src="adele-CCNet-3.png">
+
+		<left><p class="blue-background"> Lightweight RNN-DIL
+</p></left>
+	<video controls height="190">    
+    <source src="Student-DIL-test-1-7mashup.mp4" type="video/mp4">
+  </video>
+		<img src="adele-S-DIL-1.png">
+		<img src="adele-S-DIL-2.png">
+		<img src="adele-S-DIL-3.png">
+
+		<left><p class="blue-background"> MF-RNNs-DIL
+</p></left>
+	<video controls height="190">    
+    <source src="TeacherNet-DIL-test-1-7mashup.mp4" type="video/mp4">
+  </video>
+		<img src="adele-T-DIL-1.png">
+		<img src="adele-T-DIL-2.png">
+		<img src="adele-T-DIL-3.png">
+
+		<left><p class="blue-background"> Lightweight-RNN-KD [3]
+</p></left>
+	<video controls height="190">    
+    <source src="Student-KD-test-1-7mashup.mp4" type="video/mp4">
+  </video>
+		<img src="adele-KD-1.png">
+		<img src="adele-KD-2.png">
+		<img src="adele-KD-3.png">
+
+<left><p class="blue-background"> MF-RNNs (with film-language) [4]
+</p></left>
+	<video controls height="190">    
+    <source src="TeacherNet-test-1-7mashup.mp4" type="video/mp4">
+  </video>
+		<img src="adele-teacher-1.png">
+		<img src="adele-teacher-2.png">
+		<img src="adele-teacher-3.png">
+		
+<left><p class="red-background"> Official
+</p></left>
+	<video controls height="190">    
+    <source src="EdSheeran-official.mp4" type="video/mp4">
+  </video>
+		<img src="ed-official-1.png">
+		<img src="ed-official-2.png">
+		<img src="ed-official-3.png">
+
+<left><p class="red-background"> Lightweight RNN-DIL
+</p></left>
+	<video controls height="190">    
+    <source src="EdSheeran-StudentDIL.mp4" type="video/mp4">
+  </video>
+		<img src="ed-S-DIL-1.png">
+		<img src="ed-S-DIL-2.png">
+		<img src="ed-S-DIL-3.png">
+		
+<left><p class="red-background"> MF-RNNs-DIL
+</p></left>
+	<video controls height="190">    
+    <source src="EdSheeran-TeacherDIL.mp4" type="video/mp4">
+  </video>
+		<img src="ed-T-DIL-1.png">
+		<img src="ed-T-DIL-2.png">
+		<img src="ed-T-DIL-3.png">
+
+		<left><p class="red-background"> Lightweight-RNN-KD [3]
+</p></left>
+	<video controls height="190">    
+    <source src="EdSheeran-KD.mp4" type="video/mp4">
+  </video>
+		<img src="ed-KD-1.png">
+		<img src="ed-KD-2.png">
+		<img src="ed-KD-3.png">
+		
+<left><p class="red-background"> MF-RNNs (with film-language) [4]
+</p></left>
+	<video controls height="190">    
+    <source src="EdSheeran-Teacher.mp4" type="video/mp4">
+  </video>
+		<img src="ed-teacher-1.png">
+		<img src="ed-teacher-2.png">
+		<img src="ed-teacher-3.png">
+
+		<left><p class="green-background"> Official
+</p></left>
+	<video controls height="190">    
+    <source src="Anne-official.mp4" type="video/mp4">
+  </video>
+		<img src="anne-official-1.png">
+		<img src="anne-official-2.png">
+		<img src="anne-official-3.png">
+		
+<left><p class="green-background"> Lightweight RNN-DIL
+</p></left>
+	<video controls height="190">    
+    <source src="Anne-StudentDIL.mp4" type="video/mp4">
+  </video>
+		<img src="anne-S-DIL-1.png">
+		<img src="anne-S-DIL-2.png">
+		<img src="anne-S-DIL-3.png">
+		
+<left><p class="green-background"> MF-RNNs-DIL
+</p></left>
+	<video controls height="190">    
+    <source src="Anne-TeacherDIL.mp4" type="video/mp4">
+  </video>
+		<img src="anne-T-DIL-1.png">
+		<img src="anne-T-DIL-2.png">
+		<img src="anne-T-DIL-3.png">
+
+		<left><p class="green-background"> Lightweight-RNN-KD [3]
+</p></left>
+	<video controls height="190">    
+    <source src="Anne-KD.mp4" type="video/mp4">
+  </video>
+		<img src="anne-KD-1.png">
+		<img src="anne-KD-2.png">
+		<img src="anne-KD-3.png">
+
+<left><p class="green-background"> MF-RNNs (with film-language) [4]
+</p></left>
+	<video controls height="190">    
+    <source src="Anne-Teacher.mp4" type="video/mp4">
+  </video>
+		<img src="anne-teacher-1.png">
+		<img src="anne-teacher-2.png">
+		<img src="anne-teacher-3.png">
+
+		
+
+	<br>
+		Source videos:
+ <br>- Singer 1:  
+		<br>https://www.youtube.com/watch?v=Rrrrbyqba7g
+  <br>                 https://www.youtube.com/watch?v=37D0f2yPaHQ
+   <br>                    https://www.youtube.com/watch?v=ZZrkukQeJo0
+   <br>                    https://www.youtube.com/watch?v=3FlRdpSqvQs
+   <br>                    https://www.youtube.com/watch?v=J3obY-TYrX8
+
+ <br>- Singer 2: 
+		<br>https://www.youtube.com/watch?v=cJQBbYj_I0o
+          <br>        https://www.youtube.com/watch?v=UL05gjS_i6k
+          <br>            https://www.youtube.com/watch?v=FCCZ_PNBpaY
+          <br>            https://www.youtube.com/watch?v=ImiMlzPVuPQ
+          <br>            https://www.youtube.com/watch?v=HxhEVKihrtI
+
+<br> - Singer 3: 
+		<br>https://www.youtube.com/watch?v=HYzFS6WCFdw
+        <br>              https://www.youtube.com/watch?v=KOTkYnrnLmU
+        <br>              https://www.youtube.com/watch?v=MrGgBoBmw2A
+        <br>              https://www.youtube.com/watch?v=AqTMgutbd9w
+        <br>              https://www.youtube.com/watch?v=AHJojDfuUmk
+		<br>
+		<br>
+	<!--<hr>
+<h2>Demo</h2>
+	<div style="text-align: center;">
+  <video controls>    
+    <source src="Demo-small.mp4" type="video/mp4">
+  </video>
+</div>
+	<br>-->
+<hr>
+		<h2>References</h2>
+		<br> [1] D. Andrews. Communications & Multimedia Technology. Digital Overdrive, 2011. 
+			   	    	<br> [2] G. Mercado. The Filmmaker's Eye: Learning (and Breaking) the Rules of Cinematic Composition. Taylor & Francis, 2010.
+					<br> [3] G. E. Hinton, O. Vinyals, and J. Dean, Distilling the knowledge in a neural network, In NeurIPS Workshop, 2015.
+				<br>[4] W.-L. Wei, J.-C. Lin, T.-L. Liu, Y.-H. Yang, H.-M. Wang, H.-R. Tyan, and H.-Y. Liao, Seethevoice: Learning from music to visual storytelling of shots, ICME, 2018.</br>
+                    
+ 	  <!--<a name="related_work"></a>
+   	<table align=center width=1100px>
+ 	      <tr>
+  	      	<td width=400px>
+ 		           	<left>
+  	   		    	<center><h2>References</h2></center>
+ 		 	   	      <br> [1] D. Andrews. Communications & Multimedia Technology. Digital Overdrive, 2011. 
+			   	    	<br> [2] G. Mercado. The Filmmaker's Eye: Learning (and Breaking) the Rules of Cinematic Composition. Taylor & Francis, 2010.
+					<br> [3] G. E. Hinton, O. Vinyals, and J. Dean, Distilling the knowledge in a neural network, In NeurIPS Workshop, 2015.
+				<br>[4] W.-L. Wei, J.-C. Lin, T.-L. Liu, Y.-H. Yang, H.-M. Wang, H.-R. Tyan, and H.-Y. Liao, Seethevoice: Learning from music to visual storytelling of shots, ICME, 2018.</br>
+                    </left>
+           </td>
+	      </tr>
+  	</table>-->
+		<br>
+<hr>
+		<h2>BibTeX</h2>
+<div class="bibtex">
+            <pre><code>@inproceedings{LinMM20,
+    author = {Lin, Jen-Chun and Wei, Wen-Li and Lin, Yen-Yu and Liu, Tyng-Luh and Liao, Hong-Yuan Mark},
+    title = {Learning From Music to Visual Storytelling of Shots: A Deep Interactive Learning Mechanism},
+    year = {2020},
+    booktitle = {Proceedings of the 28th ACM International Conference on Multimedia},
+    pages = {102–110},
+}</code></pre>
+          </div>
+		
+</body>
+</html>
